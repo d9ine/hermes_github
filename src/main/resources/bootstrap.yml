@@ -1,0 +1,147 @@
+# Common Resource
+server:
+  port: 80
+
+#mybatis:
+#  config-location: classpath:mybatis-config.xml
+#  mapper-locations: mapper/mysql/*.xml
+
+spring:
+  application:
+    name: hermes
+  profiles:
+    active: local
+  mvc:  # Start /404 Common Exception
+    throw-exception-if-no-handler-found: true
+
+application:
+  project-name: hermes
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: ['refresh', 'health', 'metrics']
+
+#jasypt:
+#  encryptor:
+#    password: new-keys-on-the-block #암호화키
+#    algorithm: PBEWithMD5AndDES     #암호화 알고리즘 (default:PBEWithMD5AndDES)
+
+---
+# Local Resource
+spring:
+  profiles: local
+  cloud:
+    config:
+      uri: http://localhost:18081
+      enabled: false
+
+#  redis:
+#    cluster:
+#      nodes: 180.70.98.168:6393,180.70.98.169:6393,180.70.98.170:6393
+#      max-redirects: 5
+
+#  elasticsearch:
+#    host: 192.168.28.176
+#    port: 9300
+
+#  datasource:
+#    url: jdbc:oracle:thin:@172.25.9.22:1596:AIRTEST
+#    username: etour
+#    password: 'aireto!423'
+#    tomcat:
+#      max-wait: 3000
+#      max-active: 10
+#      max-idle: 10
+#      min-idle: 10
+#      initial-size: 10
+
+logging:
+  path:
+    root: ./log
+
+
+---
+# Dev Resource
+#spring:
+#  profiles: dev
+#  cloud:
+#    config:
+#      uri: http://180.70.96.71:18888
+
+#  redis:
+#    cluster:
+#      nodes: 180.70.98.168:6393,180.70.98.169:6393,180.70.98.170:6393
+#      max-redirects: 5
+#
+#  elasticsearch:
+#    host: 192.168.28.176
+#    port: 9300
+
+#  datasource:
+#    url: jdbc:log4jdbc:oracle:thin:@172.25.9.22:1596:AIRTEST
+#    username: etour
+#    password: 'aireto!423'
+#    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#    tomcat:
+#      max-wait: 3000
+#      max-active: 10
+#      max-idle: 10
+#      min-idle: 10
+#      initial-size: 10
+
+logging:
+  path:
+    root: /webapp/logs
+
+---
+# Stag Resource
+spring:
+  profiles: stag
+  cloud:
+    config:
+      uri: http://121.254.135.206:18888
+
+  redis:
+    cluster:
+      nodes: 121.254.136.165:6393,121.254.136.166:6393,121.254.136.167:6393
+      max-redirects: 5
+
+  elasticsearch:
+    host: 192.168.28.176
+    port: 9300
+
+  datasource:
+    url: jdbc:log4jdbc:oracle:thin:@172.25.5.21:1579:STGAIR
+    username: etour
+    password: ENC(GsyoCV8EcHU5uOBWm7iNfskq++qzTsJmyluLdJ6xNCQ=)
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    tomcat:
+      max-wait: 3000
+      max-active: 10
+      max-idle: 10
+      min-idle: 10
+      initial-size: 10
+
+logging:
+  path:
+    root: /webapp/logs
+
+---
+# Prod Resource
+# 프로드 정보는 운영망에 따로 반영
+spring:
+  profiles: prod
+  cloud:
+    config:
+      uri: http://localhost:18888
+
+  elasticsearch:
+    host: 222.231.50.185
+    port: 9300
+
+logging:
+  path:
+    root: /webapp/logs
