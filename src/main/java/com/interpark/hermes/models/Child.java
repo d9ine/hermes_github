@@ -10,10 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Getter
 @Setter
-@XmlRootElement(name = "SubClass")
+@XmlRootElement(name = "Child")
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class SubClass {
-    private String aa;
-    private String bb;
+public class Child {
+    private Integer age;
+    private String name;
+    private SubClass subClass;
 }

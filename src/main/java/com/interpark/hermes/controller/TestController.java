@@ -1,8 +1,8 @@
 package com.interpark.hermes.controller;
 
-import com.google.gson.Gson;
 import com.interpark.hermes.common.Marshaller;
-import com.interpark.hermes.models.ChildClass;
+import com.interpark.hermes.models.Child;
+import com.interpark.hermes.models.SubClass;
 import com.interpark.hermes.models.TestVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -26,29 +26,58 @@ public class TestController {
                         @RequestBody TestVO body) throws Exception {
 
         TestVO vo = new TestVO();
-        vo.setE("E");
-        vo.setS("S");
-        vo.setT("T");
-        vo.setTt("tt");
+        vo.setR("r");
+        vo.setE("e");
+        vo.setS("s");
+        vo.setT("t");
 
-        List<ChildClass> childList = new ArrayList<ChildClass>();
-        vo.setChildList(childList);
+        List<Child> childList = new ArrayList<>();
 
-        ChildClass child1 = new ChildClass();
+        Child child1 = new Child();
         child1.setAge(10);
 
-        ChildClass child2 = new ChildClass();
+        Child child2 = new Child();
         child2.setAge(11);
 
         childList.add(child1);
         childList.add(child2);
+        vo.setChild(childList);
 
-        return vo;
-//        return str;
+        SubClass sub = new SubClass();
+        sub.setAa("aa");
+        sub.setBb("bb");
+
+        child1.setSubClass(sub);
+        child2.setSubClass(sub);
+        log.info(vo.toString());
+
+        return body;
     }
 
     public static void main(String[] args) throws Exception {
-        String s = "{\"e\":\"e\",\"s\":\"1\",\"tt\":\"t\",\"subClass\":{\"aa\":\"aa\",\"bb\":\"bb\"},\"subClass2\":{\"aa\":\"aa\",\"bb\":\"bb\"},\"childList\":[{\"age\":10},{\"age\":11}]}";
+        String s  = "{\n" +
+                "  \"ab\": \"string\",\n" +
+                "  \"child\": [\n" +
+                "    {\n" +
+                "      \"age\": 0,\n" +
+                "      \"name\": \"string\",\n" +
+                "      \"subClass\": {\n" +
+                "        \"aa\": \"string\",\n" +
+                "        \"bb\": \"string\"\n" +
+                "      }\n" +
+                "    },{\n" +
+                "      \"age\": 1,\n" +
+                "      \"name\": \"asd\",\n" +
+                "      \"subClass\": {\n" +
+                "        \"aa\": \"aa\",\n" +
+                "        \"bb\": \"bb\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"e\": \"string\",\n" +
+                "  \"s\": \"string\",\n" +
+                "  \"t\": \"string\"\n" +
+                "}";
         Marshaller m = new Marshaller();
 
         TestVO body = (TestVO) m.unMarshall(s, TestVO.class, Marshaller.MEDIA_TYPE.JSON);

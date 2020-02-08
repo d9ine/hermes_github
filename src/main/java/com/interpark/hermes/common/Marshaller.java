@@ -10,26 +10,27 @@ import java.io.StringWriter;
 
 @Slf4j
 public class Marshaller {
-    public static enum MEDIA_TYPE {
+    public enum MEDIA_TYPE {
         XML, JSON
     }
 
     public String marshall(Object obj, MEDIA_TYPE media_type) throws Exception {
-        switch (media_type) {
-            case XML :
-                return ObjectToXml(obj);
+        if(MEDIA_TYPE.XML.equals(media_type)) {
+            return ObjectToXml(obj);
 
-            default :
-                return new Gson().toJson(obj);
+        } else {
+            //여기 gson --> jackson으로 변경할지말지 고민해보기
+            return new Gson().toJson(obj);
         }
     }
 
     public Object unMarshall(String str, Class<?> clazz, MEDIA_TYPE media_type) throws Exception {
-        switch (media_type) {
-            case XML :
-                return xmlToObject(clazz, str);
-            default :
-                return new Gson().fromJson(str, clazz);
+        if(MEDIA_TYPE.XML.equals(media_type)) {
+            return xmlToObject(clazz, str);
+
+        } else {
+            //여기 gson --> jackson으로 변경할지말지 고민해보기
+            return new Gson().fromJson(str, clazz);
         }
     }
 
