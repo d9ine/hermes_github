@@ -2,8 +2,6 @@ package com.interpark.hermes;
 
 import com.interpark.hermes.common.LogUtil;
 import com.interpark.hermes.common.Marshaller;
-import com.interpark.hermes.common.httpclient.Header;
-import com.interpark.hermes.common.httpclient.HttpClient;
 import com.interpark.hermes.models.Family;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

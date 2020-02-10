@@ -6,5 +6,5 @@ import java.lang.annotation.Target;
 
 @Documented
 @Target(ElementType.METHOD)
-public @interface AocTarget {
+public @interface MarshallingTarget {
 }

@@ -1,5 +1,6 @@
 package com.interpark.hermes.common;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +20,7 @@ public class Marshaller {
             return ObjectToXml(obj);
 
         } else {
-            //여기 gson --> jackson으로 변경할지말지 고민해보기
+//            return new ObjectMapper().writeValueAsString(obj);
             return new Gson().toJson(obj);
         }
     }
@@ -29,7 +30,7 @@ public class Marshaller {
             return xmlToObject(clazz, str);
 
         } else {
-            //여기 gson --> jackson으로 변경할지말지 고민해보기
+//            return new ObjectMapper().readValue(str, clazz);
             return new Gson().fromJson(str, clazz);
         }
     }

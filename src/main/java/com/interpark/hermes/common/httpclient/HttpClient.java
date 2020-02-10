@@ -2,6 +2,7 @@ package com.interpark.hermes.common.httpclient;
 
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,25 +10,24 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component
+@Component(value="HttpClient")
+@Scope("prototype")
 public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
     private final Integer DEFAULT_READ_TIME_OUT = 30000;
     private final Integer DEFAULT_CONNECTION_TIME_OUT = 10000;
 
     private Integer READ_TIME_OUT;
     private Integer CONNECTION_TIME_OUT;
-//    private String URL;
-    private String message;
+    private String URL;
     private List<Header> header;
 
     private OkHttpClient okHttpClient;
     private Request request;
 
-    public HttpClient(HttpClientBuilder builder) {
+    public void build(OkHttpClientBuilder builder) {
         this.READ_TIME_OUT = builder.READ_TIME_OUT;
         this.CONNECTION_TIME_OUT = builder.CONNECTION_TIME_OUT;
-//        this.URL = builder.URL;
-        this.message = builder.message;
+        this.URL = builder.URL;
         this.header = builder.header;
 
         if(this.READ_TIME_OUT == null || this.READ_TIME_OUT == 0) {
@@ -38,24 +38,24 @@ public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
             CONNECTION_TIME_OUT = DEFAULT_CONNECTION_TIME_OUT;
         }
 
-        if(this.header == null) {
+        if(this.header == null) { // to avoid null point exception
             this.header = new ArrayList<>();
         }
     }
 
-    public String get(String url) throws Exception {
-        return execute(url, null);
+    public String get() throws Exception {
+        return execute(null);
     }
 
-    @AocTarget
-    public String post(String url) throws Exception {
-        RequestBody requestBody = RequestBody.create(this.message.getBytes());
-        return execute(url, requestBody);
+    @MarshallingTarget
+    public Object post(Object messageObject, Class clazz) throws Exception {
+        RequestBody requestBody = RequestBody.create(((String) messageObject).getBytes());
+        return execute(requestBody);
     }
 
-    private String execute(String url, RequestBody requestBody) throws Exception {
+    private String execute(RequestBody requestBody) throws Exception {
         Request.Builder builder = new Request.Builder();
-        builder.url(url);
+        builder.url(this.URL);
 
         if(requestBody != null) {
             builder.post(requestBody);

@@ -3,7 +3,7 @@ package com.interpark.hermes.controller;
 import com.interpark.hermes.common.LogUtil;
 import com.interpark.hermes.common.Marshaller;
 import com.interpark.hermes.common.httpclient.HttpClient;
-import com.interpark.hermes.common.httpclient.HttpClientBuilder;
+import com.interpark.hermes.common.httpclient.OkHttpClientBuilder;
 import com.interpark.hermes.models.Family;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -52,26 +51,18 @@ public class TestController extends LogUtil {
             Marshaller m = new Marshaller();
             String message = m.marshall(family, Marshaller.MEDIA_TYPE.JSON);
 
-
-//            HttpClientBuilder b = new HttpClientBuilder()
-//                    .addHeader("Content-Type", "application/json")
-//                    .addHeader("accept", "application/json")
-//                    .setCONNECTION_TIME_OUT(3000)
-//                    .setREAD_TIME_OUT(3000)
-//                    .setMessage(message);
-
-
-            HttpClientBuilder httpClientBuilder = new HttpClientBuilder()
+            OkHttpClientBuilder okHttpClientBuilder = new OkHttpClientBuilder.Builder()
+                    .setURL("http://localhost/test/postTest")
                     .addHeader("Content-Type", "application/json")
                     .addHeader("accept", "application/json")
                     .setCONNECTION_TIME_OUT(3000)
                     .setREAD_TIME_OUT(3000)
-                    .setMessage(message);
+                    .build();
 
-//            httpClient = httpClientBuilder.build();
+            httpClient.build(okHttpClientBuilder);
 
-            String str = httpClient.post("http://localhost/test/postTest");
-            log.info(str);
+            Family fa = (Family) httpClient.post(family, Family.class);
+            log.info(fa.getName());
 
         } catch (Exception e) {
             log.error(catchLog(e));

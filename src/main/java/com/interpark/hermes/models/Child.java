@@ -14,8 +14,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Child {
-    private Integer age;
     private String name;
     private String sex;
+    private Integer age;
     private AdditionalInfo additional;
 }
