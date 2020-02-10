@@ -1,5 +1,7 @@
 package com.interpark.hermes.config;
 
+import com.interpark.hermes.common.httpclient.HttpClient;
+import com.interpark.hermes.common.httpclient.HttpClientBuilder;
 import com.interpark.hermes.interceptor.Interceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -14,7 +16,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 @Slf4j
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.interpark.*"})
+@ComponentScan(basePackages = {"com.interpark.hermes.*", "com.interpark.hermes.common.httpclient", "com.interpark.hermes.aspect"})
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

@@ -1,6 +1,8 @@
 package com.interpark.hermes.models;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,16 +15,17 @@ import java.util.List;
 
 @Getter
 @Setter
-@XmlRootElement(name = "TestVO")
+@XmlRootElement(name = "Family")
+@JsonRootName("Family")
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class TestVO {
-    @JsonProperty("ab")
-    @SerializedName("ab")
-    @XmlElement(name="ab")
-    private String r;
-    private String e;
-    private String s;
-    private String t;
+public class Family {
+    @JsonProperty("familyName")
+    @SerializedName("familyName")
+    @XmlElement(name="familyName")
+    private String name;
+    private Parent mom;
+    private Parent daddy;
+    private String address;
     private List<Child> child;
 }

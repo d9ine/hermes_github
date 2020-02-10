@@ -10,12 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Getter
 @Setter
-@XmlRootElement(name = "child")
+@XmlRootElement(name = "additionalInfo")
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Child {
-    private Integer age;
-    private String name;
-    private String sex;
-    private AdditionalInfo additional;
+public class AdditionalInfo {
+    private String hobby;
+    private String favorite;
 }

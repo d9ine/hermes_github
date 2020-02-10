@@ -17,8 +17,8 @@ public class Interceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        log.info(response.getHeader("Content-Type"));
-        log.info(response.toString());
+//        log.info(response.getHeader("Content-Type"));
+//        log.info(response.toString());
     }
 
     @Override
