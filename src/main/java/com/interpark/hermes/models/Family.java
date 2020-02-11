@@ -3,7 +3,6 @@ package com.interpark.hermes.models;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +20,6 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Family {
     @JsonProperty("familyName")
-    @SerializedName("familyName")
     @XmlElement(name="familyName")
     private String name;
     private Parent mom;

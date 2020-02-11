@@ -6,6 +6,7 @@ import com.interpark.hermes.models.Family;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 
 /** 통합테스트 시작시 모든 리소스(db커넥션등) 로드됨 **/
 
@@ -57,17 +58,17 @@ class HermesApplicationTests {
                 "}";
         Marshaller m = new Marshaller();
 
-        Family family = (Family) m.unMarshall(s, Family.class, Marshaller.MEDIA_TYPE.JSON);
-        String xml = m.marshall(family, Marshaller.MEDIA_TYPE.XML);
-        String json = m.marshall(family, Marshaller.MEDIA_TYPE.JSON);
+        Family family = (Family) m.unMarshall(s, Family.class, MediaType.APPLICATION_JSON);
+        String xml = m.marshall(family, MediaType.APPLICATION_XML);
+        String json = m.marshall(family, MediaType.APPLICATION_JSON);
         log.info(xml);
         log.info(json);
 
-        Family xmlToObj = (Family) m.unMarshall(xml, Family.class, Marshaller.MEDIA_TYPE.XML);
-        Family jsonToObj = (Family) m.unMarshall(json, Family.class, Marshaller.MEDIA_TYPE.JSON);
+        Family xmlToObj = (Family) m.unMarshall(xml, Family.class, MediaType.APPLICATION_XML);
+        Family jsonToObj = (Family) m.unMarshall(json, Family.class, MediaType.APPLICATION_JSON);
 
-        xml = m.marshall(xmlToObj, Marshaller.MEDIA_TYPE.XML);
-        json = m.marshall(jsonToObj, Marshaller.MEDIA_TYPE.JSON);
+        xml = m.marshall(xmlToObj, MediaType.APPLICATION_XML);
+        json = m.marshall(jsonToObj, MediaType.APPLICATION_JSON);
         log.info(xml);
         log.info(json);
     }

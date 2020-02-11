@@ -1,5 +1,6 @@
 package com.interpark.hermes.common.httpclient;
 
+import com.interpark.hermes.aspect.MarshallingTarget;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.context.annotation.Scope;
@@ -10,8 +11,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component(value="HttpClient")
 @Scope("prototype")
+@Component(value="HttpClient")
 public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
     private final Integer DEFAULT_READ_TIME_OUT = 30000;
     private final Integer DEFAULT_CONNECTION_TIME_OUT = 10000;
@@ -20,9 +21,6 @@ public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
     private Integer CONNECTION_TIME_OUT;
     private String URL;
     private List<Header> header;
-
-    private OkHttpClient okHttpClient;
-    private Request request;
 
     public void build(OkHttpClientBuilder builder) {
         this.READ_TIME_OUT = builder.READ_TIME_OUT;
@@ -43,12 +41,23 @@ public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
         }
     }
 
-    public String get() throws Exception {
-        return execute(null);
+    public Object post(Object messageObject, Class<?> responseClazz) throws Exception {
+        return post(messageObject, responseClazz,
+                org.springframework.http.MediaType.APPLICATION_JSON,
+                org.springframework.http.MediaType.APPLICATION_JSON);
     }
 
+    /**
+     * @param messageObject 전송할 객체
+     * @param responseClazz 응답받을 객체 모델.class, Aspect 에서 사용됨
+     * @param requestMediaType 전송할 객체의 타입(json or xml) Aspect 에서 사용됨
+     * @param responseMediaType 응답받을 객체의 타입(json or xml) Aspect 에서 사용됨
+     * @return 최종응답은 Aspect 에서 객처로 바인딩
+     */
     @MarshallingTarget
-    public Object post(Object messageObject, Class clazz) throws Exception {
+    public Object post(Object messageObject, Class<?> responseClazz,
+                       org.springframework.http.MediaType requestMediaType,
+                       org.springframework.http.MediaType responseMediaType) throws Exception {
         RequestBody requestBody = RequestBody.create(((String) messageObject).getBytes());
         return execute(requestBody);
     }
@@ -65,9 +74,9 @@ public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
             builder.addHeader(header.getKey(), header.getValue());
         }
 
-        request = builder.build();
+        Request request = builder.build();
 
-        okHttpClient = new OkHttpClient.Builder()
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(this.CONNECTION_TIME_OUT, TimeUnit.MILLISECONDS)
                 .readTimeout(this.READ_TIME_OUT, TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(false)
@@ -75,54 +84,10 @@ public class HttpClient {//인스턴스가 리셋되면 Aop에서 자동탈락;;
 
         Response response = okHttpClient.newCall(request).execute();
 
-        return response.body().string();
+        if(response.body() != null) {
+            return response.body().toString();
+        }
+
+        return null;
     }
-
-/*    public static class Builder {
-        private Integer READ_TIME_OUT;
-        private Integer CONNECTION_TIME_OUT;
-//        private String URL;
-        private String message;
-        private List<Header> header;
-
-//        public Builder(String URL) throws Exception {
-//            setURL(URL);
-//        }
-
-//        private void setURL(String URL) throws Exception {
-//            this.URL = URL;
-//
-//            if(URL == null || "".equals(URL)) {
-//                throw new Exception("URL is necessary");
-//            }
-//        }
-
-        public Builder setREAD_TIME_OUT(Integer READ_TIME_OUT) {
-            this.READ_TIME_OUT = READ_TIME_OUT;
-            return this;
-        }
-
-        public Builder setCONNECTION_TIME_OUT(Integer CONNECTION_TIME_OUT) {
-            this.CONNECTION_TIME_OUT = CONNECTION_TIME_OUT;
-            return this;
-        }
-
-        public Builder setMessage(String message) {
-            this.message = message;
-            return this;
-        }
-
-        public Builder addHeader(String key, String value) {
-            if(this.header == null) {
-                this.header = new ArrayList<>();
-            }
-
-            this.header.add(new Header.Builder().setKey(key).setValue(value).build());
-            return this;
-        }
-
-        public HttpClient build() {
-            return new HttpClient(this);
-        }
-    }*/
 }

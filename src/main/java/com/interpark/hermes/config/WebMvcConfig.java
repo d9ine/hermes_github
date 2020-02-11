@@ -6,16 +6,17 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 @Slf4j
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"com.interpark.hermes.*"})
-//@ComponentScan(basePackages = {"com.interpark.hermes.*", "com.interpark.hermes.common.httpclient", "com.interpark.hermes.aspect"})
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -39,9 +40,25 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @Scope("singleton")
     public HttpMessageConverters httpMessageConverters() {
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        return new HttpMessageConverters(mappingJackson2HttpMessageConverter);
+        HttpMessageConverters httpMessageConverters = new HttpMessageConverters(new MappingJackson2HttpMessageConverter());
+        return httpMessageConverters;
     }
+
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        converters.add(new MappingJackson2HttpMessageConverter());
+//        converters.add(createXmlHttpMessageConverter());
+//    }
+//
+//    @Bean
+//    public HttpMessageConverter<Object> createXmlHttpMessageConverter() {
+//        MarshallingHttpMessageConverter marshallingHttpMessageConverter = new MarshallingHttpMessageConverter();
+//
+//        XStreamMarshaller xStreamMarshaller = new XStreamMarshaller();
+//        marshallingHttpMessageConverter.setMarshaller(xStreamMarshaller);
+//        marshallingHttpMessageConverter.setUnmarshaller(xStreamMarshaller);
+//
+//        return marshallingHttpMessageConverter;
+//    }
 }

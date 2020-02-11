@@ -1,4 +1,4 @@
-package com.interpark.hermes.common.httpclient;
+package com.interpark.hermes.aspect;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

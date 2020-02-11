@@ -2,67 +2,43 @@ package com.interpark.hermes.controller;
 
 import com.interpark.hermes.common.LogUtil;
 import com.interpark.hermes.common.Marshaller;
-import com.interpark.hermes.common.httpclient.HttpClient;
-import com.interpark.hermes.common.httpclient.OkHttpClientBuilder;
 import com.interpark.hermes.models.Family;
+import com.interpark.hermes.service.TestService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
 @RequestMapping(value="/test")
 @Api(tags = {"TestController"})
 public class TestController extends LogUtil {
-    @GetMapping(value = "/hello")
-    public String hello(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        startJob();
-        finishJob();
-        log.info(executeTimeLog());
+    private final TestService testService;
 
+    @Autowired
+    public TestController(TestService testService) {
+        this.testService = testService;
+    }
+
+    @ApiOperation(value = "get 예제")
+    @GetMapping(value = "/hello")
+    public String hello() {
         return "hello";
     }
 
-    @PostMapping(value = "/postTest",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public Family postTest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                        @RequestBody Family family) throws Exception {
-
-        return family;
-    }
-
-    @Autowired
-    HttpClient httpClient;
-
+    @ApiOperation(value = "post, 연동, aop 예제")
     @PostMapping(value = "/family",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public Family hello(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                        @RequestBody Family family) throws Exception {
+    public Family family(@RequestBody Family family) throws Exception {
         startJob();
 
         try {
-            Marshaller m = new Marshaller();
-            String message = m.marshall(family, Marshaller.MEDIA_TYPE.JSON);
-
-            OkHttpClientBuilder okHttpClientBuilder = new OkHttpClientBuilder.Builder()
-                    .setURL("http://localhost/test/postTest")
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("accept", "application/json")
-                    .setCONNECTION_TIME_OUT(3000)
-                    .setREAD_TIME_OUT(3000)
-                    .build();
-
-            httpClient.build(okHttpClientBuilder);
-
-            Family fa = (Family) httpClient.post(family, Family.class);
-            log.info(fa.getName());
+            Family fa = (Family) testService.getEchoFamily(family, Family.class);
+            log.info(Marshaller.marshall(fa, MediaType.APPLICATION_XML));
 
         } catch (Exception e) {
             log.error(catchLog(e));
@@ -72,6 +48,14 @@ public class TestController extends LogUtil {
         finishJob();
         log.info(executeTimeLog());
 
+        return family;
+    }
+
+    @ApiOperation(value = "에코서비스")
+    @PostMapping(value = "/echo",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public Family echo(@RequestBody Family family) {
         return family;
     }
 }
