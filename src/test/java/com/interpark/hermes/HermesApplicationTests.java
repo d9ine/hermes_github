@@ -109,18 +109,18 @@ class HermesApplicationTests {
         try {
             Family family = (Family) Marshaller.unMarshall(s, Family.class, MediaType.APPLICATION_JSON);
 
-            OkHttpClientBuilder okHttpClientBuilder = new OkHttpClientBuilder.Builder()
-                    .setURL("http://localhost/test/echo")
-                    .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                    .addHeader("accept", MediaType.APPLICATION_JSON_VALUE)
-                    .setCONNECTION_TIME_OUT(3000)
-                    .setREAD_TIME_OUT(3000)
-                    .build();
-
-            httpClient.build(okHttpClientBuilder);
-
-            log.info(s);
-            log.info(httpClient.post(family, Family.class, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON) + "");
+//            OkHttpClientBuilder okHttpClientBuilder = new OkHttpClientBuilder.Builder()
+//                    .setURL("http://localhost/test/echo")
+//                    .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+//                    .addHeader("accept", MediaType.APPLICATION_JSON_VALUE)
+//                    .setCONNECTION_TIME_OUT(3000)
+//                    .setREAD_TIME_OUT(3000)
+//                    .build();
+//
+//            httpClient.build(okHttpClientBuilder);
+//
+//            log.info(s);
+//            log.info(httpClient.post(family, Family.class, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON) + "");
 
         } catch (Exception e) {
             LogUtil u = new LogUtil();

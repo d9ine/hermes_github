@@ -1,18 +1,45 @@
+#common
 application:
   project-name: hermes
 
 server:
-  port: 80
+  port: 8080
 
 spring:
   application:
     name: hermes
-
   profiles:
-    active: local
+    active: default
 
   mvc:  # Start /404 Common Exception
     throw-exception-if-no-handler-found: true
+
+mybatis:
+  mapper-locations: mapper/mysql/*.xml
+  configuration:
+    cache-enabled: true
+    auto-mapping-behavior: full
+    default-executor-type: reuse
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: null
+
+jasypt:
+  encryptor:
+    password: new-keys-on-the-block #암호화키
+    algorithm: PBEWithMD5AndDES     #암호화 알고리즘 (default:PBEWithMD5AndDES)
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: ['refresh', 'health', 'metrics']
+
+---
+
+#local
+spring:
+  profiles: local
 
   datasource:
     hikari:
@@ -24,23 +51,66 @@ spring:
       minimum-idle: 10
       connection-timeout: 3000
 
-mybatis:
-  mapper-locations: mapper/mysql/*.xml
-  configuration:
-    cache-enabled: true
-    auto-mapping-behavior: full
-    default-executor-type: reuse
-    map-underscore-to-camel-case: true
-    jdbc-type-for-null: null
+  logging:
+    path:
+      root: ./log
 
-logging:
-  path:
-    root: ./log
+---
 
-management:
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: ['refresh', 'health', 'metrics']
+#dev server
+spring:
+  profiles: dev
 
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://180.70.96.123:3306/tourplan
+      username: dev
+      password: '@Ejrrn0606'
+      maximum-pool-size: 20
+      minimum-idle: 10
+      connection-timeout: 3000
+
+  logging:
+    path:
+      root: /webapp/logs
+
+---
+
+#stg server
+spring:
+  profiles: stag
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://10.20.7.127:3306/tourplan
+      username: dev
+      password: '@Ejrrn0606'
+      maximum-pool-size: 20
+      minimum-idle: 10
+      connection-timeout: 3000
+
+  logging:
+    path:
+      root: /webapp/logs
+
+---
+
+#prod
+spring:
+  profiles: prod
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://10.20.7.127:3306/tourplan
+      username: dev
+      password: '@Ejrrn0606'
+      maximum-pool-size: 20
+      minimum-idle: 10
+      connection-timeout: 3000
+
+  logging:
+    path:
+      root: /webapp/logs
