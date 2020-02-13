@@ -2,9 +2,12 @@ package com.interpark.hermes;
 
 import com.interpark.hermes.common.LogUtil;
 import com.interpark.hermes.common.Marshaller;
+import com.interpark.hermes.common.httpclient.HttpClient;
+import com.interpark.hermes.common.httpclient.OkHttpClientBuilder;
 import com.interpark.hermes.models.Family;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
@@ -15,111 +18,109 @@ import org.springframework.http.MediaType;
 class HermesApplicationTests {
     @Test
     void marshallSample() throws Exception {
-        String s  = "{" +
-                "  \"address\": \"seoul\"," +
-                "  \"child\": [" +
-                "    {" +
-                "      \"additional\": {" +
-                "        \"favorite\": \"icecreem\"," +
-                "        \"hobby\": \"game\"" +
-                "      }," +
-                "      \"age\": 6," +
-                "      \"name\": \"sister\"," +
-                "      \"sex\": \"femail\"" +
-                "    },{" +
-                "      \"additional\": {" +
-                "        \"favorite\": \"candy\"," +
-                "        \"hobby\": \"watching tv\"" +
-                "      }," +
-                "      \"age\": 12," +
-                "      \"name\": \"brother\"," +
-                "      \"sex\": \"male\"" +
-                "    }" +
-                "  ]," +
-                "  \"daddy\": {" +
-                "    \"additionalInfo\": {" +
-                "      \"favorite\": \"sleep\"," +
-                "      \"hobby\": \"fishing\"" +
-                "    }," +
-                "    \"age\": 40," +
-                "    \"name\": \"daddy\"," +
-                "    \"sex\": \"male\"" +
-                "  }," +
-                "  \"familyName\": \"family\"," +
-                "  \"mom\": {" +
-                "    \"additionalInfo\": {" +
-                "      \"favorite\": \"wine\"," +
-                "      \"hobby\": \"cooking\"" +
-                "    }," +
-                "    \"age\": 35," +
-                "    \"name\": \"mommy\"," +
-                "    \"sex\": \"femail\"" +
-                "  }" +
+        String s  = "{\n" +
+                "  \"address\": \"string\",\n" +
+                "  \"child\": [\n" +
+                "    {\n" +
+                "      \"additionalInfo\": {\n" +
+                "        \"favorite\": \"string\",\n" +
+                "        \"hobby\": \"string\"\n" +
+                "      },\n" +
+                "      \"age\": \"string\",\n" +
+                "      \"name\": \"string\",\n" +
+                "      \"sex\": \"string\"\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"daddy\": {\n" +
+                "    \"additionalInfo\": {\n" +
+                "      \"favorite\": \"string\",\n" +
+                "      \"hobby\": \"string\"\n" +
+                "    },\n" +
+                "    \"age\": 0,\n" +
+                "    \"name\": \"string\",\n" +
+                "    \"sex\": \"string\"\n" +
+                "  },\n" +
+                "  \"familyName\": \"string\",\n" +
+                "  \"mom\": {\n" +
+                "    \"additionalInfo\": {\n" +
+                "      \"favorite\": \"string\",\n" +
+                "      \"hobby\": \"string\"\n" +
+                "    },\n" +
+                "    \"age\": 0,\n" +
+                "    \"name\": \"string\",\n" +
+                "    \"sex\": \"string\"\n" +
+                "  }\n" +
                 "}";
-        Marshaller m = new Marshaller();
 
-        Family family = (Family) m.unMarshall(s, Family.class, MediaType.APPLICATION_JSON);
-        String xml = m.marshall(family, MediaType.APPLICATION_XML);
-        String json = m.marshall(family, MediaType.APPLICATION_JSON);
+        Family family = (Family) Marshaller.unMarshall(s, Family.class, MediaType.APPLICATION_JSON);
+        String xml = Marshaller.marshall(family, MediaType.APPLICATION_XML);
+        String json = Marshaller.marshall(family, MediaType.APPLICATION_JSON);
         log.info(xml);
         log.info(json);
 
-        Family xmlToObj = (Family) m.unMarshall(xml, Family.class, MediaType.APPLICATION_XML);
-        Family jsonToObj = (Family) m.unMarshall(json, Family.class, MediaType.APPLICATION_JSON);
+        Family xmlToObj = (Family) Marshaller.unMarshall(xml, Family.class, MediaType.APPLICATION_XML);
+        Family jsonToObj = (Family) Marshaller.unMarshall(json, Family.class, MediaType.APPLICATION_JSON);
 
-        xml = m.marshall(xmlToObj, MediaType.APPLICATION_XML);
-        json = m.marshall(jsonToObj, MediaType.APPLICATION_JSON);
+        xml = Marshaller.marshall(xmlToObj, MediaType.APPLICATION_XML);
+        json = Marshaller.marshall(jsonToObj, MediaType.APPLICATION_JSON);
         log.info(xml);
         log.info(json);
     }
 
+    @Autowired
+    HttpClient httpClient;
+
     @Test
     public void postTest() throws Exception {
-        String s  = "{" +
-                "\"address\": \"string\"," +
-                "\"child\": [" +
-                "{" +
-                "\"additional\": {" +
-                "\"favorite\": \"string\"," +
-                "\"hobby\": \"string\"" +
-                "}," +
-                "\"age\": 0," +
-                "\"name\": \"string\"," +
-                "\"sex\": \"string\"" +
-                "}" +
-                "]," +
-                "\"daddy\": {" +
-                "\"additionalInfo\": {" +
-                "\"favorite\": \"string\"," +
-                "\"hobby\": \"string\"" +
-                "}," +
-                "\"age\": 0," +
-                "\"name\": \"string\"," +
-                "\"sex\": \"string\"" +
-                "}," +
-                "\"familyName\": \"string\"," +
-                "\"mom\": {" +
-                "\"additionalInfo\": {" +
-                "\"favorite\": \"string\"," +
-                "\"hobby\": \"string\"" +
-                "}," +
-                "\"age\": 0," +
-                "\"name\": \"string\"," +
-                "\"sex\": \"string\"" +
-                "}" +
+        String s  = "{\n" +
+                "  \"address\": \"string\",\n" +
+                "  \"child\": [\n" +
+                "    {\n" +
+                "      \"additionalInfo\": {\n" +
+                "        \"favorite\": \"string\",\n" +
+                "        \"hobby\": \"string\"\n" +
+                "      },\n" +
+                "      \"age\": \"string\",\n" +
+                "      \"name\": \"string\",\n" +
+                "      \"sex\": \"string\"\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"daddy\": {\n" +
+                "    \"additionalInfo\": {\n" +
+                "      \"favorite\": \"string\",\n" +
+                "      \"hobby\": \"string\"\n" +
+                "    },\n" +
+                "    \"age\": 0,\n" +
+                "    \"name\": \"string\",\n" +
+                "    \"sex\": \"string\"\n" +
+                "  },\n" +
+                "  \"familyName\": \"string\",\n" +
+                "  \"mom\": {\n" +
+                "    \"additionalInfo\": {\n" +
+                "      \"favorite\": \"string\",\n" +
+                "      \"hobby\": \"string\"\n" +
+                "    },\n" +
+                "    \"age\": 0,\n" +
+                "    \"name\": \"string\",\n" +
+                "    \"sex\": \"string\"\n" +
+                "  }\n" +
                 "}";
 
         try {
-//            HttpClient httpClient = new HttpClient.Builder("http://localhost/test/family")
-//                    .addHeader("Content-Type", "application/json")
-//                    .addHeader("accept", "application/xml")
-//                    .setCONNECTION_TIME_OUT(3000)
-//                    .setREAD_TIME_OUT(3000)
-//                    .setMessage(s)
-//                    .build();
-//
-//            log.info(s);
-//            log.info(httpClient.post() + "");
+            Family family = (Family) Marshaller.unMarshall(s, Family.class, MediaType.APPLICATION_JSON);
+
+            OkHttpClientBuilder okHttpClientBuilder = new OkHttpClientBuilder.Builder()
+                    .setURL("http://localhost/test/echo")
+                    .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                    .addHeader("accept", MediaType.APPLICATION_JSON_VALUE)
+                    .setCONNECTION_TIME_OUT(3000)
+                    .setREAD_TIME_OUT(3000)
+                    .build();
+
+            httpClient.build(okHttpClientBuilder);
+
+            log.info(s);
+            log.info(httpClient.post(family, Family.class, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON) + "");
 
         } catch (Exception e) {
             LogUtil u = new LogUtil();

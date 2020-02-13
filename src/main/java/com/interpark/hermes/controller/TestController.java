@@ -2,7 +2,9 @@ package com.interpark.hermes.controller;
 
 import com.interpark.hermes.common.LogUtil;
 import com.interpark.hermes.common.Marshaller;
+import com.interpark.hermes.mapper.TestMapper;
 import com.interpark.hermes.models.Family;
+import com.interpark.hermes.models.JPATest;
 import com.interpark.hermes.service.TestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -57,6 +61,24 @@ public class TestController extends LogUtil {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public Family echo(@RequestBody Family family) {
         return family;
+    }
+
+    @ApiOperation(value = "JPA테스트")
+    @PostMapping(value = "/jpa",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public JPATest jpa(@RequestBody JPATest param) throws Exception {
+        JPATest returnJPA = testService.selectJPATest(param);
+
+        if(returnJPA == null) {
+            Integer insertRow = testService.insertJPATest(param);
+
+            if(insertRow == 1) {
+                returnJPA = testService.selectJPATest(param);
+            }
+        }
+
+        return returnJPA;
     }
 }
 
